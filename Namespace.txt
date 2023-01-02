@@ -22,6 +22,6 @@ spec:
   restartPolicy: Never         # Defaults to Always      
 ==============================================================================================
 
-$ kubectl config set-context $(kubectl config current-context) --namespace=anshuman
+$ kubectl config set-context -current -namespace=anshuman
 $ kubectl config view | grep namespace:
 $ kubectl get pods -n anshuman 
