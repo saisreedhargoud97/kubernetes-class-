@@ -51,6 +51,119 @@ spec:
 
 ---------------------------------------------------------------------------------
 
+                 volume outside the node
+		 
+		 
+		 
+sudo apt update -y sudo apt upgrade -y
+
+sudo apt install nfs-kernel-server
+
+sudo mkdir -p /mnt/nfs_share
+
+sudo chown -R nobody:nogroup /mnt/nfs_share/
+
+sudo vim /etc/exports
+
+insert this content to /etc/exports 
+
+/mnt/nfs_share  *(rw,sync,no_subtree_check)
+
+if you face any security issues then use below content 
+
+/mnt/nfs_share  *(rw,sync,no_subtree_check,insecure)
+
+sudo exportfs -a
+
+to check exports 
+
+sudo exportfs -v 
+
+sudo systemctl restart nfs-kernel-server
+
+
+
+
+
+
+NFS-Client (in Worker Nodes)
+
+sudo apt install nfs-common
+
+showmount -e nfs-server-ip
+
+
+
+
+PersistentVolume Script
+
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-nfs-pv1
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    server: 172.31.40.166
+    path: "/mnt/nfs_share"
+
+
+
+PersistentVolumeClaim Script
+
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-nfs-pv1
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: nginx
+  name: nginx-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: nginx
+  template:
+    metadata:
+      labels:
+        run: nginx
+    spec:
+      volumes:
+      - name: hello
+        persistentVolumeClaim:
+          claimName: pvc-nfs-pv1
+      containers:
+      - image: nginx
+        name: nginx
+        volumeMounts:
+        - name: hello
+          mountPath: /usr/share/nginx/html
+
+
+
+
+
 
 
 
