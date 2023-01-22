@@ -1,0 +1,103 @@
+kubectl get ns
+
+kubectl create ns finance
+
+ubectl get ns
+
+openssl genrsa -out john.key 2048
+
+ls
+
+openssl req -new -key john.key -out john.csr -subj "/CN=john/O=finance"
+
+ls
+
+cp /etc/kubernetes/pki/ca.key .
+
+sudo cp /etc/kubernetes/pki/ca.key .
+
+ls
+
+sudo cp /etc/kubernetes/pki/ca.crt .
+
+ls
+ 
+sudo openssl x509 -req -in john.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out john.crt -days=365
+ 
+cp ~/.kube/config john.kubeconfig
+
+ls
+
+vi john.kubeconfig
+
+    server: https://172.31.18.192:6443
+  name: kubernetes
+contexts:
+- context:
+    cluster: kubernetes
+    user: john
+    namespace: finance
+  name: john-kubernetes
+current-context: john-kubernetes
+kind: Config
+preferences: {}
+users:
+- name: john
+  user:
+
+
+
+cat john.crt | base64
+
+cat john.crt | base64 -w0
+
+vi john.kubeconfig
+
+cat john.key | base64 -w0
+
+vi john.kubeconfig
+
+kubectl create role john-finance --verb=get,list --resource=pods --namespace finance
+
+ kubectl -n finance get role john-finance -o yaml
+
+kubectl create rolebinding john-finance-rolebinding --role=john-finance --user=john --namespace=finance
+
+ kubectl -n finance get rolebinding john-finance-rolebinding -o yaml
+
+kubectl -n finance edit role john-finance -o yaml
+
+ kubectl --kubeconfig john.kubeconfig get pods
+
+
+
+ Now you can share the kubeconfig file and access your cluster externally 
+
+
+##########################################################################################################
+
+kubectl -n finance edit role john-finance -o yaml
+
+
+#
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: "2023-01-22T08:41:33Z"
+  name: john-finance
+  namespace: finance
+  resourceVersion: "7279"
+  uid: 534bbb4e-267a-493e-983f-e2ea4ba98147
+rules:
+- apiGroups:
+  - '*'
+  resources:
+  - pods
+  - deployments
+  - replicasets
+  - namespaces
+  verbs:
+  - get
+  - list
+  - create
+  - edit
