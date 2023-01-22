@@ -4,11 +4,11 @@ kubectl create ns finance
 
 ubectl get ns
 
-openssl genrsa -out john.key 2048
+openssl genrsa -out anshu.key 2048
 
 ls
 
-openssl req -new -key john.key -out john.csr -subj "/CN=john/O=finance"
+openssl req -new -key anshu.key -out john.csr -subj "/CN=anshu/O=finance"
 
 ls
 
@@ -22,7 +22,7 @@ sudo cp /etc/kubernetes/pki/ca.crt .
 
 ls
  
-sudo openssl x509 -req -in john.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out john.crt -days=365
+sudo openssl x509 -req -in anshu.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out anshu.crt -days=365
  
 cp ~/.kube/config john.kubeconfig
 
@@ -35,39 +35,39 @@ vi john.kubeconfig
 contexts:
 - context:
     cluster: kubernetes
-    user: john
+    user: anshu
     namespace: finance
-  name: john-kubernetes
-current-context: john-kubernetes
+  name: anshu-kubernetes
+current-context: anshu-kubernetes
 kind: Config
 preferences: {}
 users:
-- name: john
+- name: anshu
   user:
 
 
 
-cat john.crt | base64
+cat anshu.crt | base64
 
-cat john.crt | base64 -w0
+cat anshu.crt | base64 -w0
 
-vi john.kubeconfig
+vi anshu.kubeconfig
 
-cat john.key | base64 -w0
+cat anshu.key | base64 -w0
 
-vi john.kubeconfig
+vi anshu.kubeconfig
 
-kubectl create role john-finance --verb=get,list --resource=pods --namespace finance
+kubectl create role anshu-finance --verb=get,list --resource=pods --namespace finance
 
- kubectl -n finance get role john-finance -o yaml
+ kubectl -n finance get role anshu-finance -o yaml
 
-kubectl create rolebinding john-finance-rolebinding --role=john-finance --user=john --namespace=finance
+kubectl create rolebinding anshu-finance-rolebinding --role=anshu-finance --user=anshu --namespace=finance
 
- kubectl -n finance get rolebinding john-finance-rolebinding -o yaml
+ kubectl -n finance get rolebinding anshu-finance-rolebinding -o yaml
 
-kubectl -n finance edit role john-finance -o yaml
+kubectl -n finance edit role anshu-finance -o yaml
 
- kubectl --kubeconfig john.kubeconfig get pods
+ kubectl --kubeconfig anshu.kubeconfig get pods
 
 
 
@@ -76,7 +76,7 @@ kubectl -n finance edit role john-finance -o yaml
 
 ##############################################################################################################################################################
 
-kubectl -n finance edit role john-finance -o yaml
+kubectl -n finance edit role anshu-finance -o yaml
 
 
 #
@@ -84,7 +84,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   creationTimestamp: "2023-01-22T08:41:33Z"
-  name: john-finance
+  name: anshu-finance
   namespace: finance
   resourceVersion: "7279"
   uid: 534bbb4e-267a-493e-983f-e2ea4ba98147
@@ -104,10 +104,10 @@ rules:
 
 
 
- kubectl --kubeconfig john.kubeconfig get pods
+ kubectl --kubeconfig anshu.kubeconfig get pods
 
-kubectl --kubeconfig john.kubeconfig get deploy
+kubectl --kubeconfig anshu.kubeconfig get deploy
 
-kubectl --kubeconfig john.kubeconfig run anshu --image=nginx
+kubectl --kubeconfig anshu.kubeconfig run anshu --image=nginx
 
-kubectl --kubeconfig john.kubeconfig create deployment anshu1 --image=nginx --replicas=5
+kubectl --kubeconfig anshu.kubeconfig create deployment anshu1 --image=nginx --replicas=5
