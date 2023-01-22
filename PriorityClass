@@ -1,1 +1,26 @@
+priorityclass.yml
 
+
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+globalDefault: false
+description: "This priority class should be used for high priority pods only."
+
+
+
+
+pod.yml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: high-priority-pod
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+    imagePullPolicy: IfNotPresent
+  priorityClassName: high-priority
