@@ -74,7 +74,7 @@ kubectl -n finance edit role john-finance -o yaml
  Now you can share the kubeconfig file and access your cluster externally 
 
 
-##########################################################################################################
+##############################################################################################################################################################
 
 kubectl -n finance edit role john-finance -o yaml
 
@@ -101,3 +101,13 @@ rules:
   - list
   - create
   - edit
+
+
+
+ kubectl --kubeconfig john.kubeconfig get pods
+
+kubectl --kubeconfig john.kubeconfig get deploy
+
+kubectl --kubeconfig john.kubeconfig run anshu --image=nginx
+
+kubectl --kubeconfig john.kubeconfig create deployment anshu1 --image=nginx --replicas=5
