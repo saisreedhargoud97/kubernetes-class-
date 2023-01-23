@@ -8,7 +8,7 @@ openssl genrsa -out anshu.key 2048
 
 ls
 
-openssl req -new -key anshu.key -out john.csr -subj "/CN=anshu/O=finance"
+openssl req -new -key anshu.key -out anshu.csr -subj "/CN=anshu/O=finance"
 
 ls
 
