@@ -13,7 +13,7 @@ Let’s create Our First Helm Chart
 helm repo add stable https://charts.helm.sh/stable
  	
 ===============================================================================
-helm commands to list , search and remove 
+helm commands to list , search and remove the repo
 
 helm repo list
 
